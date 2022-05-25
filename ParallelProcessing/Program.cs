@@ -32,6 +32,31 @@ Console.WriteLine($"Elapsed time using Parallel.ForEachAsync with {longProcesses
 //Equal to the longest process running on Parallel.ForEach
 
 
+Console.WriteLine("\n\n");
+var data = new List<int>();
+Console.WriteLine("Normal operation using For");
+watch.Restart();
+for (int i = 0; i < longProcessesCount; i++)
+{
+    data = new List<int>();
+    data.AddRange(Enumerable.Range(0, i * 100000000));
+}
+watch.Stop();
+Console.WriteLine($"Elapsed time using For to generate a range of numbers: {watch.ElapsedMilliseconds}ms.");
+
+
+Console.WriteLine("\n\n");
+Console.WriteLine("Normal operation using For");
+watch.Restart();
+Parallel.For(0, longProcessesCount, value => {
+    data = new List<int>();
+    data.AddRange(Enumerable.Range(0, value * 100000000));
+});
+watch.Stop();
+Console.WriteLine($"Elapsed time using ParallelFor to generate a range of numbers: {watch.ElapsedMilliseconds}ms.");
+//For relatively lower values, the ParallelFor has similar time to the common For
+
+
 #region Parallel Processing Methods
 static async Task SomethingWithLongProcess(int seconds)
 {
